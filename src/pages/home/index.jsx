@@ -1,7 +1,7 @@
 //Import library
 import { Avatar, Carousel, Col, Row } from "antd";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 //Import word
 import { homeLib } from "@/library/homePage/homeLib";
@@ -24,7 +24,7 @@ import img_partnership from "@/assets/images/partnership.png";
 import { BtnYellow } from "@/components/button";
 import { VerticalProduct } from "@/components/product";
 import { ROUTES } from "../../config";
-
+import { useEffect } from "react";
 
 //Handle and export
 const HomePage = () => {
@@ -140,7 +140,15 @@ const HomePage = () => {
       </div>
     );
   };
-  
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const jwtToken = searchParams.get("access_token_user");
+  useEffect(() => {
+    if (jwtToken) {
+      localStorage.setItem("access_token_user", jwtToken);
+    }
+  }, [jwtToken]);
+
   return (
     <div className="homePage flex-1">
       <div className="homePage__main">
@@ -174,9 +182,13 @@ const HomePage = () => {
             {nextSlide(goToSlideBanner, "banner")}
 
             <div className="absolute z-10 left-2/4 top-2/4 -translate-y-2/4 md:flex-col gap-5 xl:flex hidden">
-              <p className="w-96 text-white text-justify text-xl">{homeLib.word_titleBanner}</p>
+              <p className="w-96 text-white text-justify text-xl">
+                {homeLib.word_titleBanner}
+              </p>
               <img src={img_banner_content} alt="" width={250} />
-              <p className="w-96 text-white opacity-80 text-justify">{homeLib.word_desBanner}</p>
+              <p className="w-96 text-white opacity-80 text-justify">
+                {homeLib.word_desBanner}
+              </p>
               <Link to="/product">
                 <div className="inline-block cursor-pointer">
                   {BtnYellow(homeLib.btn_orderNow)}
@@ -192,13 +204,21 @@ const HomePage = () => {
             style={{ paddingLeft: 0, paddingRight: 0 }}
           >
             <div className="py-5 px-4">
-              <div className="text-center text-4xl text-[#603809] font-bold mb-8">{homeLib.word_coffeeDiscovery}</div>
+              <div className="text-center text-4xl text-[#603809] font-bold mb-8">
+                {homeLib.word_coffeeDiscovery}
+              </div>
 
               <Row className="py-5 test">
                 <Col md={{ span: 12 }} span={24} className="mb-5 md:mb-0">
-                  <div className="text-xl font-semibold mb-5">{homeLib.word_discoverBestCoffee}</div>
-                  <p className="text-justify md:w-3/4 mb-5 text-xs sm:text-base">{homeLib.word_desOneDiscover}</p>
-                  <p className="text-justify md:w-3/4 mb-5 text-xs sm:text-base">{homeLib.word_desTwoDiscover}</p>
+                  <div className="text-xl font-semibold mb-5">
+                    {homeLib.word_discoverBestCoffee}
+                  </div>
+                  <p className="text-justify md:w-3/4 mb-5 text-xs sm:text-base">
+                    {homeLib.word_desOneDiscover}
+                  </p>
+                  <p className="text-justify md:w-3/4 mb-5 text-xs sm:text-base">
+                    {homeLib.word_desTwoDiscover}
+                  </p>
                 </Col>
 
                 <Col md={{ span: 12 }} span={24} align="middle">
@@ -213,12 +233,19 @@ const HomePage = () => {
 
             <div className="flex flex-col gap-5 mb-8 md:mb-0">
               <div className="text-center md:my-8 my-1">
-                <span className="text-4xl text-[#603809] font-bold ">{homeLib.word_coffeeProductsDat}</span>
-                <p className="mt-3 text-sm text-gray-500">{homeLib.word_coffeeProductsDatDes}</p>
+                <span className="text-4xl text-[#603809] font-bold ">
+                  {homeLib.word_coffeeProductsDat}
+                </span>
+                <p className="mt-3 text-sm text-gray-500">
+                  {homeLib.word_coffeeProductsDatDes}
+                </p>
               </div>
 
               <div className="flex flex-wrap justify-center sm:justify-start">
-                <Link className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.PRODUCT} >
+                <Link
+                  className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.PRODUCT}
+                >
                   {VerticalProduct(
                     img_productPoster,
                     "Title Name Coffee",
@@ -226,7 +253,10 @@ const HomePage = () => {
                     "20"
                   )}
                 </Link>
-                <Link className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.PRODUCT} >
+                <Link
+                  className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.PRODUCT}
+                >
                   {VerticalProduct(
                     img_productPoster,
                     "Title Name Coffee",
@@ -234,7 +264,10 @@ const HomePage = () => {
                     "20"
                   )}
                 </Link>
-                <Link className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.PRODUCT} >
+                <Link
+                  className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.PRODUCT}
+                >
                   {VerticalProduct(
                     img_productPoster,
                     "Title Name Coffee",
@@ -242,7 +275,10 @@ const HomePage = () => {
                     "20"
                   )}
                 </Link>
-                <Link className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.PRODUCT} >
+                <Link
+                  className="sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.PRODUCT}
+                >
                   {VerticalProduct(
                     img_productPoster,
                     "Title Name Coffee",
@@ -270,16 +306,28 @@ const HomePage = () => {
               </div>
 
               <div className="flex flex-wrap justify-center sm:justify-start">
-                <Link className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.NEWS}>
+                <Link
+                  className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.NEWS}
+                >
                   <img src={img_infoMore} alt="" className="hover:shadow-2xl" />
                 </Link>
-                <Link className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.NEWS}>
+                <Link
+                  className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.NEWS}
+                >
                   <img src={img_infoMore} alt="" className="hover:shadow-2xl" />
                 </Link>
-                <Link className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.NEWS}>
+                <Link
+                  className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.NEWS}
+                >
                   <img src={img_infoMore} alt="" className="hover:shadow-2xl" />
                 </Link>
-                <Link className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4" to={ROUTES.NEWS}>
+                <Link
+                  className="w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                  to={ROUTES.NEWS}
+                >
                   <img src={img_infoMore} alt="" className="hover:shadow-2xl" />
                 </Link>
               </div>
