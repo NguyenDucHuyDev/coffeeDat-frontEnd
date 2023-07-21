@@ -1,6 +1,6 @@
 //Import library
-import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Menu, Modal } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal } from 'antd';
 import { NavLink, useOutletContext } from 'react-router-dom';
 import { Fragment, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -27,7 +27,10 @@ import { Notification } from '@/components/notification';
 
 
 const ProfilePage = () => {
+  
   const {userInfo} = useOutletContext();
+  const [changePasswordForm] = Form.useForm();
+
   const [btnDisable, setBtnDisable] = useState(false)  
   const dispatch = useDispatch()
   const { contextHolder, openNotificationWithIcon} = Notification()
@@ -36,29 +39,6 @@ const ProfilePage = () => {
 
   const [modal2Open, setModal2Open] = useState(false);
   const [changeAddress,setChangeAddress] = useState("")
-  function getItem(label, key, icon, children) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    };
-  }
-
-  // const menuItems = [
-  //   getItem(
-  //     <NavLink
-  //       to={ROUTES.PROFILE}
-  //       className={({isActive}) => 
-  //         isActive ? "bg-[#F9C06A]" : null
-  //       }
-  //     >
-  //       Profile
-  //     </NavLink>
-  //     , "profile", <UserOutlined />),
-  //   getItem("Order Statistics", "order-statistics", <ShoppingCartOutlined />),
-  // ];
-
 
   const handleEditAddress = () =>{
     openEditAddress.current.style.display = `block`
@@ -103,6 +83,7 @@ const ProfilePage = () => {
       .then(res =>{
         if(res.error) return openNotificationWithIcon("error", "Fail", res.error)
         openNotificationWithIcon("success", "Success", res.message)
+        changePasswordForm.resetFields()
       }).finally(()=>{
         setBtnDisable(false)
       })
@@ -181,14 +162,7 @@ const ProfilePage = () => {
               />
               <div className="text-center">{userInfo?.name}</div>
             </div>
-            {/* <Menu
-              style={{
-                width: 254,
-                border: "none",
-                background:"transparent"
-              }}
-              items={menuItems}
-            /> */}
+
             <div className="w-64">
               <NavLink
                 to={ROUTES.PROFILE}
@@ -309,6 +283,7 @@ const ProfilePage = () => {
                 <div className="text-xl font-bold">Change Password</div>
                 <Form 
                   layout="vertical"
+                  form={changePasswordForm}
                   className="bg-[#f6f6f6] py-5 px-8 shadow-md"
                   onFinish={onFinishChangePassword}
                 >

@@ -22,7 +22,7 @@ import { NestedRoute } from '@/components/nestedRoute';
 const RootRouter = () => {
   const checkToken = localStorage.getItem("access_token_user")
   const dispatch = useDispatch()
-
+  debugger
   const userToken = useSelector(state => state.token.checkToken) 
   useEffect(()=>{},[userToken])
 
