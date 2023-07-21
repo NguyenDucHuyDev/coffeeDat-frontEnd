@@ -12,6 +12,7 @@ import { ROUTES } from '../../config';
 
 //import slice redux
 import { setUserInfo } from '../../redux/features/user/userSlice';
+import { checkToken } from '@/redux/features/user/tokenSlice';
 
 //Import function
 import { Notification } from '@/components/notification';
@@ -38,9 +39,10 @@ const VerifyEmailPage = () => {
     })
       .then(res => {
         if(res.error) return openNotificationWithIcon('error', 'Fail', res.error)
-        localStorage.setItem("access_token_user", res.user.jwt_token)
-        dispatch(setUserInfo(res.user))
-        navigate(ROUTES.HOME)
+        localStorage.setItem("access_token_user", res.user.jwt_token),
+        dispatch(setUserInfo(res.user)),
+        dispatch(checkToken(true)),
+        navigate(ROUTES.HOME),
         localStorage.removeItem("user_id")
       }).finally(()=>{
         setBtnDisable(false)

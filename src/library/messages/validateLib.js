@@ -7,7 +7,7 @@ export const validateFieldLib = {
   
   phone: "Phone",
   phone_empty: "Please input your phone!",
-  phone_incorrect: "Invalid phone format!",
+  phone_incorrect: "Phone number must be number",
   phone_placeholder: "Please enter your phone",
 
   password: "Password",
@@ -34,7 +34,7 @@ export const validateFieldLib = {
 
   min_6: "Minimum 6 characters",
 
-  max_20: "Maximum is 20 characters",
+  max_64: "Maximum is 64 characters",
 
   note:"Note",
   note_placeholder: "Please enter your note",

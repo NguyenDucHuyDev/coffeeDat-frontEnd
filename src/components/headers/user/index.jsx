@@ -34,7 +34,6 @@ const UserHeader = ({userInfo}) => {
 
   const handleDropdown = (label, url) => {
     if(url == "/") {
-      console.log(url)
       localStorage.removeItem("access_token_user"),
       localStorage.removeItem("access_token_user_exp"),
       dispatch(setUserInfo(null)),

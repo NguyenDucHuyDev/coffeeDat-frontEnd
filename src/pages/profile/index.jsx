@@ -24,16 +24,17 @@ import { ROUTES } from '@/config';
 import { TotalHeaderHeight } from '@/components/headers/TotalHeaderHeight';
 import { checkAvatarUser } from '@/utils/checkImage';
 import { Notification } from '@/components/notification';
+import { useEffect } from 'react';
 
 
 const ProfilePage = () => {
+
   const {userInfo} = useOutletContext();
   const [btnDisable, setBtnDisable] = useState(false)  
   const dispatch = useDispatch()
   const { contextHolder, openNotificationWithIcon} = Notification()
   const openEditAddress = useRef(null)
   const avatarRef = useRef(null)
-
   const [modal2Open, setModal2Open] = useState(false);
   const [changeAddress,setChangeAddress] = useState("")
   function getItem(label, key, icon, children) {
@@ -258,7 +259,7 @@ const ProfilePage = () => {
                           message: validateFieldLib.phone_empty
                         },
                         {
-                          pattern: /^(\+84|0)\d{9,10}$/,
+                          pattern:"^[0-9]*$",
                           message: validateFieldLib.phone_incorrect
                         }
                       ]}
@@ -278,12 +279,8 @@ const ProfilePage = () => {
                           message: validateFieldLib.name_empty
                         },
                         {
-                          min: 6,
-                          message: validateFieldLib.min_6,
-                        },
-                        {
-                          max: 20,
-                          message: validateFieldLib.max_20,
+                          max: 64,
+                          message: validateFieldLib.max_64,
                         }
                       ]}
                     >
@@ -332,7 +329,9 @@ const ProfilePage = () => {
                         }
                       ]}
                     >
-                      <Input.Password placeholder={validateFieldLib.password_placeholder} />
+                      <Input.Password 
+                        placeholder={validateFieldLib.password_placeholder} 
+                      />
                     </Form.Item>
                     <Form.Item
                       name="newPassword"
@@ -534,6 +533,7 @@ const ProfilePage = () => {
                               htmlType="submit"
                               disabled={btnDisable}
                               loading={btnDisable}
+                              onClick={() => setModal2Open(false)}
                             >Change
                             </Button>
                           </div>

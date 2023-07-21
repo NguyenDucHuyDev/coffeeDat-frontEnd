@@ -82,7 +82,7 @@ const RegisterPage = () => {
                       message: validateFieldLib.phone_empty
                     },
                     {
-                      pattern: /^(\+84|0)\d{9,10}$/,
+                      pattern:"^[0-9]*$",
                       message: validateFieldLib.phone_incorrect
                     }
                   ]}
@@ -148,12 +148,8 @@ const RegisterPage = () => {
                       message: validateFieldLib.name_empty
                     },
                     {
-                      min: 6,
-                      message: validateFieldLib.min_6,
-                    },
-                    {
-                      max: 20,
-                      message: validateFieldLib.max_20,
+                      max: 64,
+                      message: validateFieldLib.max_64,
                     }
                   ]}
                 >
