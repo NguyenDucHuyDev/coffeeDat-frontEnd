@@ -9,7 +9,6 @@ import apiAxiosAuth from '@/utils/api/auth'
 //Handle and export
 export const ProductMenu = () => {
   const [menuItems, setMenuItems] = useState(null);
-  console.log(menuItems)
   useEffect(() => {
     const categoryUrl = "product/get-all-category";
     const urls = [categoryUrl];
@@ -25,7 +24,6 @@ export const ProductMenu = () => {
     });
   }, []);
 
-  console.log(menuItems)
   return (
     <div className="bg-[#f6f6f6] flex-1">
       {!menuItems ? (
@@ -44,8 +42,8 @@ export const ProductMenu = () => {
                 to={`/product/type/${item._id}/page/1`}
                 className={({isActive}) => 
                   isActive 
-                    ? "hover:bg-[#F9C06A] cursor-pointer bg-[#F9C06A] block mb-2"
-                    : "hover:bg-[#F9C06A] cursor-pointer block mb-2"
+                    ? "cursor-pointer bg-[#FFFEFC] block mb-2"
+                    : "cursor-pointer block mb-2"
                 }
               >
                 <div className="px-10 py-3 text-base">{item.name}</div>

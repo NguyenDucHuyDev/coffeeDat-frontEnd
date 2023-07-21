@@ -20,13 +20,16 @@ import { NestedRoute } from '@/components/nestedRoute';
 
 // Handle and export
 const RootRouter = () => {
-  const dispatch = useDispatch()
-  const checkUser = useSelector(state => state.user)
   const checkToken = localStorage.getItem("access_token_user")
-  useEffect(() => {},[checkUser])
+  const dispatch = useDispatch()
+
+  const userToken = useSelector(state => state.token.checkToken) 
+  useEffect(()=>{},[userToken])
+
   useEffect(() => {
     if(checkToken) apiAxiosUser.get("is-auth").then(res => dispatch(setUserInfo(res.user)))
   },[dispatch, checkToken])
+
 
   const configPathRoutes = {
     user: [
@@ -38,7 +41,6 @@ const RootRouter = () => {
         path: ROUTES.LOGIN,
         protectedRoute: !checkToken,
         element: lazy(() => import('@/pages/login'))
-
       },
       {
         path:ROUTES.REGISTER,
@@ -64,7 +66,7 @@ const RootRouter = () => {
       },
       {
         path:ROUTES.VERIFY_EMAIL,
-        element: lazy(() => import('@/pages/verify_email'))
+        element: lazy(() => import('@/pages/verifyEmail'))
       },
       {
         path:ROUTES.ABOUT_US,
@@ -84,6 +86,7 @@ const RootRouter = () => {
       },
       {
         path:ROUTES.PROFILE,
+        protectedRoute: checkToken,
         element: lazy(() => import('@/pages/profile'))
       },
       {
@@ -95,7 +98,7 @@ const RootRouter = () => {
 
   return(
     <Routes>
-      <Route element={checkToken ? <UserLayout userInfo={checkUser.userInfo} /> : <AuthLayout />}>
+      <Route element={checkToken ? <UserLayout /> : <AuthLayout />}>
         {NestedRoute(configPathRoutes.user)} 
       </Route>
     </Routes>

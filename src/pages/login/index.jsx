@@ -1,7 +1,8 @@
 //Import library
 import { Button, Checkbox, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useState } from 'react';
 
 //Import path api
 import apiAxiosAuth from "@/utils/api/auth";
@@ -15,21 +16,24 @@ import { validateFieldLib } from "@/library/messages/validateLib";
 
 //Import features Redux
 import { setUserInfo } from "@/redux/features/user/userSlice";
+import { checkToken } from "@/redux/features/user/tokenSlice";
 
 //Import function
 import { Notification } from "@/components/notification";
 
 //Import image
-import img_logoGoogle from "@/assets/images/logo_google.png";
-import img_logoFacebook from "@/assets/images/logo_facebook.png";
-import img_logoZalo from "@/assets/images/logo_zalo.png";
+import img_logoGoogle from '@/assets/images/logo_google.png';
 
+//Handle and export
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { contextHolder, openNotificationWithIcon } = Notification();
+  const [btnDisable, setBtnDisable] = useState(false)
+  const { contextHolder, openNotificationWithIcon} = Notification()
 
-  const onFinishLogin = (dataLogin) => {
+  const onFinishLogin = (values) => {
+    const {remember, ...dataLogin} = values
+    setBtnDisable(true)
     apiAxiosAuth.post("user/sign-in", dataLogin).then((res) => {
       if (res.error)
         return openNotificationWithIcon("error", "Fail", res.error);
@@ -43,12 +47,19 @@ const LoginPage = () => {
             navigate(ROUTES.VERIFY_EMAIL)
           );
         }
-
-        dispatch(setUserInfo(res.user));
-        localStorage.removeItem("user_id");
+        dispatch(checkToken(true)),
+        dispatch(setUserInfo(res.user)),
+        localStorage.removeItem("user_id")
+        if(!remember) {
+          const exp = new Date(new Date().getTime() + 1000 * 60 * 60 * 24).getTime()
+          // const exp = new Date(new Date().getTime() + 1000 * 10).getTime()
+          localStorage.setItem("access_token_user_exp", exp)
+        }
         localStorage.setItem("access_token_user", res.user.jwt_token);
         navigate(ROUTES.HOME);
       }
+    }).finally(()=>{
+      setBtnDisable(false)
     });
   };
 
@@ -108,11 +119,9 @@ const LoginPage = () => {
                 </Form.Item>
 
                 <div className="flex items-center justify-between mb-6 gap-2">
-                  <div>
-                    <Checkbox size="small">
-                      {loginLib.word_rememberPassword}
-                    </Checkbox>
-                  </div>
+                  <Form.Item name="remember" valuePropName="checked" noStyle>
+                    <Checkbox>{loginLib.word_rememberPassword}</Checkbox>
+                  </Form.Item>
 
                   <Link to={ROUTES.RETRIEVE_PASSWORD} className="text-black">
                     <pre className="text-xs text-black cursor-auto">
@@ -126,6 +135,8 @@ const LoginPage = () => {
                   size="large"
                   type="ghost"
                   htmlType="submit"
+                  disabled={btnDisable}
+                  loading={btnDisable}
                 >
                   {loginLib.btn_login}
                 </Button>
@@ -138,14 +149,11 @@ const LoginPage = () => {
                 </div>
 
                 <div className="flex items-center gap-10 justify-center mb-6">
-                  <a
-                    href={`${import.meta.env.VITE_PATH_URL_SERVER}auth/google`}
+                  <Link
+                    to={`${import.meta.env.VITE_PATH_URL_SERVER}auth/google`}
                   >
                     <img src={img_logoGoogle} alt="" width={36} height={36} />
-                  </a>
-
-                  <img src={img_logoFacebook} alt="" width={36} height={36} />
-                  <img src={img_logoZalo} alt="" width={36} height={36} />
+                  </Link>
                 </div>
 
                 <div className="flex items-center gap-1 justify-center">

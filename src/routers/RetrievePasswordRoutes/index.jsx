@@ -17,11 +17,11 @@ const RetrievePasswordRoutes = () => {
     retrievePassword: [
       {
         path: "/",
-        element: lazy(() => import('@/pages/retrieve_password'))
+        element: lazy(() => import('@/pages/retrievePassword'))
       },
       {
         path: ":detailSlug",
-        element: lazy(() => import('@/pages/retrieve_password/AuthSlug'))
+        element: lazy(() => import('@/pages/retrievePassword/AuthSlug'))
       },
     ]
   }

@@ -1,6 +1,7 @@
 //Import Library
 import { Button, Form, Input } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 //Import path api
 import apiAxiosAuth from '@/utils/api/auth'
@@ -8,23 +9,26 @@ import apiAxiosAuth from '@/utils/api/auth'
 //Import name router
 import { ROUTES } from '@/config'
 
-//Import library
+//Import word
 import { registerLib } from '@/library/registerPage/registerLib'
 import { validateFieldLib } from '@/library/messages/validateLib';
 
 //Import image
-import img_logoGoogle from '@/assets/images/logo_google.png'
-import img_logoFacebook from '@/assets/images/logo_facebook.png'
-import img_logoZalo from '@/assets/images/logo_zalo.png'
+// import img_logoGoogle from '@/assets/images/logo_google.png'
+
 
 //Import function
 import { Notification } from '@/components/notification';
+
 
 const RegisterPage = () => {
 
   const navigate = useNavigate()
   const { contextHolder, openNotificationWithIcon} = Notification()
+  const [btnDisable, setBtnDisable] = useState(false)
+
   const onFinishRegister = (values) => {
+    setBtnDisable(true)
     // eslint-disable-next-line no-unused-vars
     const {confirm_password, ...dataRegister} = values 
     apiAxiosAuth.post("user/signup", dataRegister)
@@ -34,6 +38,8 @@ const RegisterPage = () => {
           localStorage.setItem("user_id", res.user._id),
           navigate(ROUTES.VERIFY_EMAIL)
         }
+      }).finally(()=>{
+        setBtnDisable(false)
       })
   } 
   return(
@@ -41,7 +47,7 @@ const RegisterPage = () => {
       {contextHolder}
       <div className="registerPage__main py-5">
         <div className="md:bg-banner-login pageWrapper min-h-[38rem] rounded-2xl bg-cover flex flex-col justify-center items-center md:p-5">
-          <div className="min-w-full md:min-w-[35rem] bg-white min-h-[30rem] shadow-lg rounded">
+          <div className="min-w-full md:min-w-[35rem] bg-white min-h-[28rem] shadow-lg rounded">
             <div className="text-center mt-6 font-bold text-2xl text-green-500">{registerLib.word_register}</div>
             <Form
               layout="vertical"
@@ -180,29 +186,34 @@ const RegisterPage = () => {
               
               <div className="mb-6 text-center">
                 <Button 
-                  className="bg-green-500 text-white font-bold inline-block" 
+                  className={
+                    btnDisable 
+                      ? "cursor-not-allowed bg-green-500 text-white font-bold inline-block" 
+                      : "cursor-pointer bg-green-500 text-white font-bold inline-block"
+                  } 
                   size="large"
                   type="ghost"
                   htmlType="submit"
+                  disabled={btnDisable}
+                  loading={btnDisable}
                 >{registerLib.word_register}
                 </Button>
               </div>
 
-              <div className="relative mb-6">
+              {/* <div className="relative mb-6">
                 <div className="h-[0.1rem] bg-slate-200"></div>
                 <div className="absolute top-0 left-2/4 -translate-x-2/4 -translate-y-2/4 bg-white z-10 px-5">OR</div>
               </div>
               
               <div className="flex items-center gap-10 justify-center mb-6">
                 <img src={img_logoGoogle} alt="" width={36} height={36} />
-                <img src={img_logoFacebook} alt="" width={36} height={36} />
-                <img src={img_logoZalo} alt="" width={36} height={36} />
-              </div>
+              </div> */}
               
               <div className="flex items-center gap-1 justify-center">
                 <span>{registerLib.word_haveAccount}</span>
                 <Link to={ROUTES.LOGIN}><span className="text-green-500 cursor-pointer">{registerLib.word_login}</span></Link>
               </div>
+
             </Form>
           </div>
         </div>

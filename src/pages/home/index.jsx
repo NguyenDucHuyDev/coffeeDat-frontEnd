@@ -2,6 +2,10 @@
 import { Avatar, Carousel, Col, Row } from "antd";
 import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+//Import Slice
+import { checkToken } from "@/redux/features/user/tokenSlice";
 
 //Import word
 import { homeLib } from "@/library/homePage/homeLib";
@@ -26,11 +30,13 @@ import { VerticalProduct } from "@/components/product";
 import { ROUTES } from "../../config";
 import { useEffect } from "react";
 
+
 //Handle and export
 const HomePage = () => {
   //prev and next slide
   const goToSlideBanner = useRef();
   const goToSlideFeedback = useRef();
+  const dispatch = useDispatch()
 
   //items section banner
   const bannerItems = [
@@ -142,10 +148,12 @@ const HomePage = () => {
   };
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const jwtToken = searchParams.get("access_token_user");
+  const jwtToken = searchParams.get("jwt_token");
+
   useEffect(() => {
     if (jwtToken) {
       localStorage.setItem("access_token_user", jwtToken);
+      dispatch(checkToken(true))
     }
   }, [jwtToken]);
 

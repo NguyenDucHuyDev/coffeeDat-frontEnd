@@ -1,34 +1,34 @@
 //import library
-import { Button, Form, InputNumber, notification } from 'antd';
+import { Button, Form, InputNumber } from 'antd';
 import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 //import api axios user
 import apiAxiosAuth from '../../utils/api/auth'
 
 //import ROUTES
 import { ROUTES } from '../../config';
+
 //import slice redux
 import { setUserInfo } from '../../redux/features/user/userSlice';
+
+//Import function
+import { Notification } from '@/components/notification';
 
 //handle and export
 const VerifyEmailPage = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+  const { contextHolder, openNotificationWithIcon} = Notification()
+  const [btnDisable, setBtnDisable] = useState(false)
+  const [count, setCount] = useState(1)
   const userID = localStorage.getItem("user_id")
   if(!userID) return <Navigate to={ROUTES.LOGIN} replace />
-
-  // api dialog box useNotification
-  const [api, contextHolder] = notification.useNotification();
-  const openNotificationWithIcon = (type, message, des) => {
-    api[type]({
-      message: message,
-      description:des
-    });
-  }
+  
   const onFinishVerify = (values) => {
+    setBtnDisable(true)
     const value = Object.values(values);
     const concatCodeVerify = value.join('');
 
@@ -42,13 +42,26 @@ const VerifyEmailPage = () => {
         dispatch(setUserInfo(res.user))
         navigate(ROUTES.HOME)
         localStorage.removeItem("user_id")
-      })
+      }).finally(()=>{
+        setBtnDisable(false)
+      });
   }
 
   const handleSendOtp = () =>{
     apiAxiosAuth.post("user/resend-email-verify",{
       "userId": userID
     }).then(res =>{
+      if(count > 3) {
+        return(
+          setCount(0),
+          setBtnDisable(true),
+          setTimeout(() => {
+            btnDisable(false)
+            setCount(1)
+          }, 60000)
+        )
+      }
+      if(res.error == "You can resend OTP after five minutes") setCount(pre => pre += 1 )
       if(res.error) return openNotificationWithIcon('error', 'Fail', res.error)
       openNotificationWithIcon('success', 'Success', res.message)
     })
@@ -120,7 +133,15 @@ const VerifyEmailPage = () => {
                 </div>
 
                 <div className="mb-5 flex justify-center">
-                  <span className="cursor-pointer" onClick={handleSendOtp}>Resend OTP?</span>
+                  <Button 
+                    type="link"
+                    className="cursor-pointer" 
+                    style={{border:"0"}}
+                    onClick={handleSendOtp}
+                    disabled = {!count}
+                  >
+                    Resend OTP?
+                  </Button>
                 </div>
 
                 <div className="flex justify-center">
@@ -129,6 +150,8 @@ const VerifyEmailPage = () => {
                     size="large"
                     type="ghost"
                     htmlType="submit"
+                    disabled={btnDisable}
+                    loading={btnDisable}
                   >VerifyCation
                   </Button>
                 </div>

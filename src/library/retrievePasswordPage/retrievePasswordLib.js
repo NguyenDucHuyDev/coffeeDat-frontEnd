@@ -1,5 +1,5 @@
 
-export const retrieve_passwordLib = { 
+export const retrievePasswordLib = { 
   word_resetPassword: "Reset Password",
   word_email: "Email",
   placeholder_email: "Please enter your email",

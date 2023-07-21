@@ -6,7 +6,7 @@ import { useState } from 'react';
 import apiAxiosAuth from '@/utils/api/auth';
 
 //Import word
-import { retrieve_passwordLib } from '@/library/retrieve_passwordPage/retrieve_passwordLib';
+import { retrievePasswordLib } from '@/library/retrievePasswordPage/retrievePasswordLib';
 import { validateFieldLib } from '@/library/messages/validateLib';
 
 //Import image
@@ -20,9 +20,19 @@ const RetrievePasswordPage = () => {
   const [email, setEmail] = useState("");
   const { contextHolder, openNotificationWithIcon} = Notification()
   const [openModal, setOpenModal] = useState(false);
-
+  const [count, setCount] = useState(1)
   const onFinishSendReqEmail = (emailValue) => {
     apiAxiosAuth.post("user/forget-password", emailValue).then((res) => {
+      if(count > 3) {
+        return(
+          setCount(0),
+          setTimeout(() => {
+            setCount(1)
+          }, 60000)
+        )
+      }
+      if(res.error == "You can resend OTP after file minutes") setCount(pre => pre += 1 )
+      
       if (res.error) return openNotificationWithIcon("error", "Fail", res.error);
       setEmail(emailValue.email);
       setOpenModal(true);
@@ -36,17 +46,17 @@ const RetrievePasswordPage = () => {
         <div className="pageWrapper p-5 flex flex-col items-center justify-center min-h-[45rem]">
           <div className="min-w-full md:min-w-[25rem] bg-white shadow-xl rounded-2xl p-5">
             <div className="my-5">
-              <span className="text-2xl text-[#603809] font-bold">{retrieve_passwordLib.word_resetPassword}</span>
+              <span className="text-2xl text-[#603809] font-bold">{retrievePasswordLib.word_resetPassword}</span>
             </div>
 
             <div className="border-b-2 pb-3 mb-5 border-[#F9C06A]">
-              <span className="text-[#F9C06A] cursor-pointer">{retrieve_passwordLib.word_email}</span>
+              <span className="text-[#F9C06A] cursor-pointer">{retrievePasswordLib.word_email}</span>
             </div>
 
             <Form layout="vertical" onFinish={onFinishSendReqEmail}>
               <Form.Item
                 name="email"
-                label={retrieve_passwordLib.word_email}
+                label={retrievePasswordLib.word_email}
                 rules={[
                   {
                     required: true, 
@@ -58,7 +68,7 @@ const RetrievePasswordPage = () => {
                   },
                 ]}
               >
-                <Input classNames={retrieve_passwordLib.placeholder_email} className="py-2" />
+                <Input classNames={retrievePasswordLib.placeholder_email} className="py-2" />
               </Form.Item>
 
               <div className="flex justify-center">
@@ -67,8 +77,10 @@ const RetrievePasswordPage = () => {
                   size="large"
                   type="ghost"
                   htmlType="submit"
+                  disabled={!count}
+                  loading={!count}
                 >
-                  {retrieve_passwordLib.btn_continue}
+                  {retrievePasswordLib.btn_continue}
                 </Button>
               </div>
             </Form>
@@ -77,12 +89,12 @@ const RetrievePasswordPage = () => {
           <Modal
             title={
               <div className="">
-                <span className="text-xl font-bold">{retrieve_passwordLib.word_securityVerification}</span>
+                <span className="text-xl font-bold">{retrievePasswordLib.word_securityVerification}</span>
 
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2 text-base font-normal my-5">
                     <img src={img_iconMail} alt="" width={16} />
-                    <span>{retrieve_passwordLib.word_sentEmail} {email}</span>
+                    <span>{retrievePasswordLib.word_sentEmail} {email}</span>
                   </div>
 
                   <Button
@@ -91,10 +103,9 @@ const RetrievePasswordPage = () => {
                     type="ghost"
                     onClick={() =>{setOpenModal(false)}}
                   >
-                    {retrieve_passwordLib.word_confirm}
+                    {retrievePasswordLib.word_confirm}
                   </Button>
                 </div>
-
               </div>
             }
             centered

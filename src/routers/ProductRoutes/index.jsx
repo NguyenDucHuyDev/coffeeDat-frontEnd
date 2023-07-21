@@ -10,7 +10,7 @@ const ProductRoutes = () => {
   useEffect(() => {
     setIsLoaded(false);
   }, []);
-
+  
   const configPathRoutes = {
     product: [
       {
@@ -48,10 +48,13 @@ const ProductRoutes = () => {
             ]
           },
         ]
-      }
+      },
+      // {
+      //   path: "*",
+      //   element: lazy(() => import('@/pages/error'))
+      // }
     ]
   }
-
 
   return(
     <Suspense>

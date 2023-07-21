@@ -10,7 +10,7 @@ import apiAxiosAuth from '../../utils/api/auth';
 import { ROUTES } from '../../config';
 
 //Import word
-import { authSlugLib } from '@/library/retrieve_passwordPage/authSlugLib';
+import { authSlugLib } from '@/library/retrievePasswordPage/authSlugLib';
 
 //Import validate
 import { validateFieldLib } from '@/library/messages/validateLib';
