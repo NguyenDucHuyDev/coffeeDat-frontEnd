@@ -93,7 +93,6 @@ const ProductDetail = () => {
   useEffect(() => {
     apiAxiosAuth.get("product/get-product-detail/"+detailSlug)
       .then(res =>{
-        console.log(res)
         setProductInfo(res)
       }).catch(()=>{
         setProductInfo("PageNotFound")

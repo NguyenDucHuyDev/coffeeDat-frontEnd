@@ -1,7 +1,7 @@
 //import library
 import { Avatar, Col, Drawer, Dropdown, Form, Input, Menu, Row, Skeleton } from 'antd';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 //import name router
@@ -28,13 +28,12 @@ import img_iconArrowDow from '@/assets/images/arrow-down.png';
 
 
 const UserHeader = ({userInfo}) => {  
-  console.log(userInfo)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  useEffect(() =>{
+  },[userInfo])
   const handleDropdown = (label, url) => {
     if(url == "/") {
-      console.log(url)
       localStorage.removeItem("access_token_user"),
       localStorage.removeItem("access_token_user_exp"),
       dispatch(setUserInfo(null)),
